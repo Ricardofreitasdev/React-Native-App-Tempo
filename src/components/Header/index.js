@@ -5,25 +5,25 @@ import { Ionicons } from '@expo/vector-icons'
 
 
 
-export default function Header(){
+export default function Header({ icon, bg, dados }){
 
     return(
      <LinearGradient
      
      style={ styles.header } 
-     colors={['#1ed6ff' , '#97c1ff']}     
+     colors={bg}     
      >
-    <Text style={ styles.date }>07/10/2021</Text>
-    <Text style={ styles.city }>Marilia/SP</Text>
+    <Text style={ styles.date }>{ dados.data.results.date }</Text>
+    <Text style={ styles.city }>{ dados.data.results.city }</Text>
     <Ionicons
     
-    name="cloud"
-    color="#fff"
+    name={icon.name}
+    color={icon.color}
     size={150}
     
     />
 
-    <Text style={ styles.temperatura } >30°</Text>   
+    <Text style={ styles.temperatura } >{dados.data.results.temp}°</Text>   
     </LinearGradient>
     )
 }

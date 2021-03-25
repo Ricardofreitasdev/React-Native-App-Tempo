@@ -3,7 +3,8 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons'
 import { Ionicons } from '@expo/vector-icons';
 
-export default function Conditions(){
+export default function Conditions({ dados }){
+
 
     return(
         <View style={ styles.wrapper }>      
@@ -14,7 +15,7 @@ export default function Conditions(){
                 size={30}
                 color="#2FE2E2"
             />
-            <Text style={ styles.wrapper__item__text }>7 km/hr</Text>
+            <Text style={ styles.wrapper__item__text }>{dados.data.results.wind_speedy}</Text>
            </View>
 
            <View style={ styles.wrapper__item }>
@@ -23,7 +24,7 @@ export default function Conditions(){
                 size={30}
                 color="#2FE2E2"
             />
-            <Text style={ styles.wrapper__item__text }>5:22 am</Text>
+            <Text style={ styles.wrapper__item__text }>{dados.data.results.sunrise}</Text>
            </View>
 
            <View style={ styles.wrapper__item }>
@@ -32,7 +33,7 @@ export default function Conditions(){
                 size={30}
                 color="#2FE2E2"
             />
-            <Text style={ styles.wrapper__item__text }>5:36 pm</Text>
+            <Text style={ styles.wrapper__item__text }>{dados.data.results.sunset}</Text>
            </View>
 
            <View style={ styles.wrapper__item }>
@@ -40,7 +41,7 @@ export default function Conditions(){
                 name="water-outline"
                 size={30}
                 color="#2FE2E2" />
-            <Text style={ styles.wrapper__item__text }>54</Text>
+            <Text style={ styles.wrapper__item__text }>{dados.data.results.humidity}</Text>
            </View>
 
         </View>

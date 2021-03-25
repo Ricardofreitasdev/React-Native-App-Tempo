@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { SafeAreaView, Text, StyleSheet, FlatList } from 'react-native';
 import Conditions from '../../components/Conditions';
 import Forecast from '../../components/Forecast';
 import Header from '../../components/Header';
 import Menu from '../../components/Menu';
+import * as Location from 'expo-location';
+
+import { SECRET_KEY } from '@env';
+
+import api from '../../services/api';
+
+
 
 const myList =  [
     {
@@ -90,17 +97,71 @@ const myList =  [
 
 
 export default function Home(){
+
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [dados, setDados] = useState([])
+  const [icon, setIcon] = useState({name: 'cloud', color:'#fff'})
+  const [bg, setBg] = useState(['#1ed6ff' , '#97c1ff'])
+
+
+  const secret_key = SECRET_KEY;
+
+  useEffect(() =>{
+
+    (async ()=> {
+      let { status } = await Location.requestPermissionsAsync();
+
+      if(status !== 'granted'){
+        setErrorMsg('Permissão negada para ver localização');
+        setLoading(false);
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      
+      let latitude = location.coords.latitude;
+      let longitude = location.coords.longitude;
+
+      const response = await api.get(`/weather?key=${secret_key}&lat=${latitude}&lon=${longitude}`);
+      
+      setDados(response);   
+    
+        if(response.data.currently == 'noite'){
+        setBg(['#0c3741' , '#0f2f61'])
+      }
+
+      switch (response.data.condition_slug) {
+
+        case 'clear_day':
+          setIcon({name: 'partly-sunny', color: '#ffb300'})
+          break;
+
+        case 'rain':
+          setIcon({name: 'rainy', color: '#fff'})
+          break;
+      
+      }
+
+      setLoading(false);
+    })()  
+
+    }, [])
+
     return(
        <SafeAreaView style={ styles.container } > 
+
        <Menu />  
-       <Header />
-       <Conditions />
+
+       <Header icon={icon} bg={bg} dados={dados} />
+
+       <Conditions dados={dados}/>
 
        <FlatList
             horizontal={true}
             contentContainerStyle={ styles.list__wrapper }
              style={ styles.list }
-             data={ myList }
+             data={ dados.data.results.forecast }
              keyExtractor={ item => item.date }
              renderItem={ ({ item }) => <Forecast data={ item } />}
        />
